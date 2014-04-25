@@ -1,162 +1,104 @@
-# Jonathan Fok kan
-# 260447938
-# Assignment 3 MIPS
-# Question 1
-# Part 1
 
+	 .data
+string1: .asciiz "Enter the value of a: "
+string2: .asciiz "Enter the value of b: "
+string3: .asciiz "Enter the value of x0: "
+string4: .asciiz "Enter the value of y0: "
+string5: .asciiz "Enter the number of iterations n: "
+string6: .asciiz "(x"
+string7: .asciiz ", y"
+string8: .asciiz ") = ("
+string9: .asciiz ", "
+string10: .asciiz ")\n"
+newline:  .asciiz "\n"
 
-    .globl main
-main:
-    # input section
-    ## value of a
-    li $v0, 4 
-    la $a0, aPrompt
-    syscall
-    li $v0, 6
-    syscall
-    mov.s $f6, $f0          #store a in $f6
-
-    ## value of b
-    li $v0, 4 
-    la $a0, bPrompt
-    syscall
-    li $v0, 6
-    syscall
-    mov.s $f8, $f0           #store b in $f8
-
-    ## value of x0
-    li $v0, 4 
-    la $a0, xPrompt
-    syscall
-
-    li $v0, 6
-    syscall
-    mov.s $f10, $f0         #store x0 in $f10
-
-    ## value of y0
-    li $v0, 4
-    la $a0, yPrompt
-    syscall
-    li $v0, 6
-    syscall
-    mov.s $f16, $f0         #store y0 in $f16
-
-    ## number of iterations
-    li $v0, 4
-    la $a0, nPrompt
-    syscall
-    li $v0, 5
-    syscall
-    move $t0, $v0            #store n in $t0
-    
-    li $v0, 4
-    la $a0, lbasecase       #print (x0, y0) = (
-    syscall
-    li $v0, 2
-    mov.s $f12, $f10        #print x0
-    syscall
-    li $v0, 4
-    la $a0, comma           #print ,
-    syscall
-    
-    li $v0, 2               #print y0
-    mov.s $f12, $f16
-    syscall
-
-    li $v0, 4               #print )
-    la $a0, cBraq
-    syscall
-    la $a0, newline         # print newline
-    syscall
-
-    # Counter is in $t1
-    li $t1, 1
-    add $t0, $t0, 1
-
-loop:
-    beq $t1, $t0, Done
-
-    # f(x,y) = ( x^2-y^2+a , 2xy+b )
-    # compute f(x,y) and new x is stored in $f10 and
-    # new y is stored in $f16
-    
-    # x^2 
-    mul.s $f20, $f10, $f10
-    # y^2
-    mul.s $f22, $f16, $f16
-    # x^2-y^2 in $f20
-    sub.s $f20, $f20, $f22
-
-    # 2xy
-    mul.s $f22, $f10, $f16
-    l.s $f24, two
-    mul.s $f22, $f22, $f24 
-
-    # new x
-    add.s $f10, $f20, $f6
-
-    # new y
-    add.s $f16, $f22, $f8
-
-    li $v0, 4               # print (x
-    la $a0, rBraq
-    syscall
-    li $v0, 1               # print counter
-    move $a0, $t1
-    syscall
-    li $v0, 4               # print ,
-    la $a0, comma
-    syscall
-    li $v0, 4               # print y
-    la $a0, y
-    syscall
-    li $v0, 1               # print counter
-    move $a0, $t1
-    syscall
-    li $v0, 4               # print ) = (
-    la $a0, lBraq
-    syscall
-    li $v0, 2               # print xi
-    mov.s $f12, $f10
-    syscall
-    li $v0, 4               # print comma
-    la $a0, comma
-    syscall
-    li $v0, 2               # print yi
-    mov.s $f12, $f16
-    syscall
-    li $v0, 4               # print )
-    la $a0, cBraq
-    syscall
-    la $a0, newline         # print newline
-    syscall
-
-
-
-    addi $t1, $t1, 1         #increase counter by 1
-
-    j loop
-
-    
-
-
-Done:
-    li $v0, 10
-    syscall
-    
-
-    .data
-aPrompt: .asciiz "Enter the value of a: "
-bPrompt: .asciiz "Enter the value of b: "
-xPrompt: .asciiz "Enter the value of x0: "
-yPrompt: .asciiz "Enter the value of y0: "
-nPrompt: .asciiz "Enter the number of iterations n: "
-newline: .asciiz "\n"
-two: .float 2.0
-lbasecase: .asciiz "(x0, y0) = ("
-rBraq: .asciiz "(x"
-comma: .asciiz ", "
-y: .asciiz "y"
-lBraq: .asciiz ") = ("
-cBraq: .asciiz ")"
-
+	 .text
+	 .globl main
+main:	 li	$v0, 4
+	 la	$a0, string1
+	 syscall
+	 li	$v0, 6
+	 syscall
+	 mov.s   $f1, $f0		# load a to $f1
+	 
+	 li	$v0, 4
+	 la	$a0, string2
+	 syscall
+	 li	$v0, 6
+	 syscall
+	 mov.s   $f2, $f0		# load b to $f2
+	 
+	 li	$v0, 4			
+	 la	$a0, string3
+	 syscall
+	 li	$v0, 6
+	 syscall
+	 mov.s   $f3, $f0		# load x0 to $f3
+	 
+	 li	$v0, 4
+	 la	$a0, string4
+	 syscall
+	 li	$v0, 6
+	 syscall
+	 mov.s   $f4, $f0		# load y0 to $f4
+	 
+	 li	$v0, 4
+	 la	$a0, string5
+	 syscall
+	 li	$v0, 5
+	 syscall
+	 move   $s0, $v0		# load number of iterations n to $s0
+	 li	$v0, 4
+	 la	$a0, newline
+	 syscall
+	 
+	 add	$t0, $0, $0		# $t0 = 0
+	 
+Loop:	 beq	$t0, $0, Print		#if n ($s1) has not been changed, print x0, y0 directly
+	 
+	 mul.s	$f5, $f3, $f3		# $f5 = x * x
+	 mul.s	$f6, $f4, $f4		# $f6 = y * y
+	 sub.s	$f7, $f5, $f6		# f7 = x^2 - y^2
+	 add.s	$f7, $f7, $f1		# f7 = x^2 - y^2 + a
+	 
+	 mul.s	$f5, $f3, $f4		# $f5 = x * y
+	 add.s	$f5, $f5, $f5		# $f5 = 2xy
+	 add.s	$f6, $f5, $f2		# $f6 = 2xy + b
+	 mov.s  $f3, $f7		# x = $f7
+	 mov.s  $f4, $f6		# y = $f6
+	 
+Print:	 la	$a0, string6
+	 syscall
+	 li	$v0, 1
+	 add	$a0, $t0, $0
+	 syscall
+	 li	$v0, 4
+	 la	$a0, string7
+	 syscall
+	 li	$v0, 1
+	 add	$a0, $t0, $0
+	 syscall
+	 li	$v0, 4
+	 la	$a0, string8
+	 syscall
+	 
+	 li	$v0, 2
+	 mov.s	$f12, $f3
+	 syscall
+	 li	$v0, 4
+	 la	$a0, string9
+	 syscall
+	 
+	 li	$v0, 2
+	 mov.s	$f12, $f4
+	 syscall
+	 li	$v0, 4
+	 la	$a0, string10
+	 syscall
+	 
+	 addi	$t0, $t0, 1
+	 slt	$t1, $s0, $t0		# $t1 = 1 if $t0 > n
+	 beq	$t1, $0, Loop		# if ($t0 <= n) goto Loop
+	 
+Done:	 li $v0, 10
+	 syscall
